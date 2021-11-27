@@ -206,7 +206,7 @@ class Message(object):
             
 def get_dir():
     #不清楚是启动程序调用 还是 手动启动本文件， 
-    #如果是启动程序调用一定有dmesg_py文件
+    #如果是启动程序调用一定有 dmesg_py 文件
     #手动启动则没有dmesg_py文件
     #if sys.argv[1].endswith('')
     dir = sys.argv[1] + '\dmesg_py.txt'  

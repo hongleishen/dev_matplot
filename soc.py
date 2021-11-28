@@ -75,7 +75,7 @@ def get_soc_message(m):
     #print(m.df)
 
 
-#=======================================
+# =======================================
 
 
 def find_i_max(df, v_soc):
@@ -115,7 +115,9 @@ def parse(info, str, n, cl, li):
     # global li
     if info.startswith(str):
         temp = info.split(':')
-        if n == 2:  #cl是行名，只解一行即可，其余相同
+        # print(n)
+        if n == 2:  # cl是行名，只解一行即可，其余行相同，不用解析
+            # print(n, "n == 2")
             cl.append(temp[0])
         if temp[1] == '':
             temp[1] = '0'
@@ -123,9 +125,10 @@ def parse(info, str, n, cl, li):
             temp = int(temp[1])
         except:
             temp = temp[1]
-        li.append(temp)  #li 是line 一行的数据,, 一行数据，添加一行的指定元素值
+        li.append(temp)  # li 是line 一行的数据,, 一行数据，添加一行的指定元素值
 
-
+# li 一行的数据
+# cl 行名
 def get_data(n, li, cl, datas, m=None):
     # global li
     # global n
@@ -140,20 +143,19 @@ def get_data(n, li, cl, datas, m=None):
         for line in f.readlines():
             # global n
             n = n + 1
+
             if (line.startswith('device')):
-                # print("device here")
                 device = line.split('=')
                 temp = device[1].split(' ')
                 temp = float(temp[0])
                 li.append(temp)
-                #cl.append("Uptime")
                 #print(li)
+
             else:
-                #print(line)
                 l = line.split(':: ')
                 for index, info in enumerate(l):
                     if index == len(l) - 1:
-                        datas.append(li)  #datas是整体数据, 添加一整行数据
+                        datas.append(li)  # datas是整体数据, 添加一整行数据
                         #print('empty li[]')
                         li = []
                         break
@@ -222,12 +224,10 @@ def plot_soc(df):
             #print('down')
         fig_soc.canvas.draw_idle()  # 绘图动作实时反映在图像上
 
-        # if x_max - x_min < 500 and has_ticks == 0 :
-        # has_ticks = 1
-        # draw_ticks(df,1)
-
     fig_soc = plt.figure(figsize=(16, 8))
     fig_soc.canvas.mpl_connect('scroll_event', call_back)
+
+    # 取消 上 右边框
     ax_soc = plt.subplot(111)
     ax_soc.spines['top'].set_visible(False)
     ax_soc.spines['right'].set_visible(False)
@@ -237,7 +237,7 @@ def plot_soc(df):
     time = df['Uptime']
     try:
         V_bus = df['usbVoltage']
-        plt.plot(time, V_bus / 1000000, 'b', linewidth=3.0)
+        plt.plot(time, V_bus / 1000000, 'b', linewidth=3.0, label = "V_bus")
     except:
         print('missing Uptime')
 
@@ -248,20 +248,20 @@ def plot_soc(df):
                  '--',
                  color='olive',
                  linewidth=0.7,
-                 alpha=0.8)
+                 alpha=0.8, label = "I_bus")
     except:
         print('Missing usbCurrent')
     #plt.plot(time,I_bus_set)
 
     try:
         T_batt = df['batteryTemp']
-        plt.plot(time, T_batt / 100, '-.', color='r', alpha=0.5)
+        plt.plot(time, T_batt / 100, '-.', color='r', alpha=0.5, label = "T_batt")
     except:
         print('Missing batteryTemp')
 
     try:
         I_batt = df['batteryCurrent']
-        plt.plot(time, I_batt / 1000000, 'g', linewidth=2.0)
+        plt.plot(time, I_batt / 1000000, 'g', linewidth=2.0, label = "I_batt")
     except:
         print('Missing batteryCurrent')
 
@@ -269,7 +269,7 @@ def plot_soc(df):
 
     try:
         T_main = df['chargerTemp']
-        plt.plot(time, T_main / 100, ':', color='hotpink')
+        plt.plot(time, T_main / 100, ':', color='hotpink', label = "T_main")
     except:
         print('Missing chargerTemp')
 
@@ -281,19 +281,19 @@ def plot_soc(df):
                  '-.',
                  color='orange',
                  linewidth=0.5,
-                 marker='.')
+                 marker='.', label = "T_cp")
     except:
         print('Missing CP_temp')
 
     try:
         I_cp = df['CPCurrent']
-        plt.plot(time, I_cp / 1000000, color='#ADFF2F', linewidth=0.6)
+        plt.plot(time, I_cp / 1000000, color='#ADFF2F', linewidth=0.6, label = "I_cp")
     except:
         print('Missing CPCurrent')
 
     try:
         En_cp = df['CPEnable']
-        plt.plot(time, En_cp, color='b', linewidth=0.3, alpha=0.7)
+        plt.plot(time, En_cp, color='b', linewidth=0.3, alpha=0.7, label = "En_cp")
     except:
         print('Missing CPEnable')
     ############################################################
@@ -306,7 +306,7 @@ def plot_soc(df):
     #ax.legend(loc='upper center', ncol=1, bbox_to_anchor=(1.15,1))
 
     # ----------tick---------------------
-    ymajorLocator = MultipleLocator(1)
+    ymajorLocator = MultipleLocator(1)  # set Y 坐标刻度 精度为1
     ax_soc.yaxis.set_major_locator(ymajorLocator)
 
     # str_time = list(map(str, time))
@@ -334,10 +334,10 @@ if __name__ == '__main__':
     # %matplotlib inline
     from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
-    datas = []
-    cl = ['Uptime']
+    datas = []          # 解析的数据
+    cl = ['Uptime']     # 行名
     n = 0
-    li = []
+    li = []             # 解析一行的数据
     t_max = 0
 
     m_soc = Msoc()
@@ -347,8 +347,8 @@ if __name__ == '__main__':
     # np_datas = np.array(datas)
     # index = np_datas[:,0]
 
-    # print(cl)
-    # print(datas)
+    #print('cl =', cl,  "\n")
+    #print("datas = ", datas , "\n")
     df = pd.DataFrame(data=datas, columns=cl)
 
     # 四个参数 截取时间
@@ -363,4 +363,8 @@ if __name__ == '__main__':
             df = df[df['Uptime'] >= float(sys.argv[2])]  #开始 结束时间传入
     elif len(sys.argv) <= 2:
         df = df[df['SOC'] < 100]
+
+    #print("\n", df)
+
+
     plot_soc(df)

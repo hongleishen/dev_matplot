@@ -1,6 +1,7 @@
 ﻿import re
 import matplotlib.pyplot as plt
-#---a.------pdo请求--------------------------
+
+# ---a.------pdo请求--------------------------
 def get_pdo_data(text):
     lt = []
     lv = []

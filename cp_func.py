@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 
 
-# ---a.------pdo请求--------------------------
+# ---a.------pdo请求---------------PD 请求协议-----------
 def get_pdo_data(text):
     lt = []
     lv = []
@@ -79,11 +79,8 @@ def get_Properties_status2_data(text, ltt, lt_main_hot, lt_cp_hot, lt_main,
         tcp = int(cp) / 10
         lt_cp.append(tcp)
 
-        lt_enable.append(int(enabled) * 4 +
-                         20)  #bit7  Enable pin high:   1 pin脚使能
-        lt_sw_en.append(
-            sw_en(status2) * 4 +
-            15)  #bit0  Switcher_hold_off: 1 hold_off ;  bit_0 && bit_7
+        lt_enable.append(int(enabled) * 4 + 20)   # bit7  Enable pin high:   1 pin脚使能
+        lt_sw_en.append(sw_en(status2) * 4 + 15)  # bit0  Switcher_hold_off: 1 hold_off ;  bit_0 && bit_7
 
         lt_main_cp.append(tmain - tcp)
 
@@ -248,12 +245,12 @@ if __name__ == '__main__':
     #%matplotlib inline
     import re
     from matplotlib.widgets import SpanSelector
-    from matplotlib.widgets import Cursor
-    from matplotlib.widgets import MultiCursor
+    #from matplotlib.widgets import Cursor
+    #from matplotlib.widgets import MultiCursor
     from matplotlib.widgets import RadioButtons
 
     fig1, ax1 = plt.subplots(figsize=(12, 8))
-    cursor = Cursor(ax1, useblit=True, linewidth=0.5)
+    #cursor = Cursor(ax1, useblit=True, linewidth=0.5)
 
     f = open('dmesg.txt')
     text = f.read()
@@ -264,9 +261,7 @@ if __name__ == '__main__':
         onselect,
         'horizontal',
         useblit=True,
-        rectprops=dict(
-            alpha=0.5,
-            facecolor='red'))  #SpanSelector给 onselect返回 xmin，xmax两个参数
+        props=dict(alpha=0.5, facecolor='red'))  #SpanSelector给 onselect返回 xmin，xmax两个参数
 
     #---缩放--------------------
     # ----------缩放--------------------------
@@ -300,11 +295,11 @@ if __name__ == '__main__':
 
     radio.on_clicked(select_votable_func)
 
-    #^^^^^^^^^^^^^^^^^pdo^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    # ^^^^^^^^^^^^^^^^^pdo^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     lt, lv = get_pdo_data(text)
-    #ax1.plot(lt, lv, linestyle=':', linewidth=0.1, marker='o', markersize=1.5, markerfacecolor='r', label = "pdo")  #pdo
+    ax1.plot(lt, lv, linestyle=':', linewidth=0.1, marker='o', markersize=1.5, markerfacecolor='r', label = "pdo")  #pdo
 
-    #^^^^^^^^^^^^^^^^get_Properties_status2_data^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    # ^^^^^^^^^^^^^^^^get_Properties_status2_data^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     ltt = []
     lt_main_hot = []
     lt_cp_hot = []
@@ -353,12 +348,12 @@ if __name__ == '__main__':
             continue
 
         if v_switcher[i] > v_switcher[i - 1]:
-            print(">")
+            #print(">")
             ax1.text(t_switcher[i], v_switcher[i], t_switcher[i], horizontalalignment='left', 
                 verticalalignment='bottom', fontsize=6, alpha=0.8, rotation=70)
 
         if v_switcher[i] < v_switcher[i - 1]:
-            print("<")
+            #print("<")
             ax1.text(t_switcher[i - 1], v_switcher[i - 1], t_switcher[i - 1], horizontalalignment='left', 
                 verticalalignment='bottom', fontsize=5.8, alpha=0.7, rotation=0)
 

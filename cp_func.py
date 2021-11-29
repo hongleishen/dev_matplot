@@ -302,13 +302,7 @@ if __name__ == '__main__':
 
     #^^^^^^^^^^^^^^^^^pdo^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     lt, lv = get_pdo_data(text)
-    ax1.plot(lt,
-             lv,
-             linestyle=':',
-             linewidth=0.1,
-             marker='o',
-             markersize=1.5,
-             markerfacecolor='r')  #pdo
+    #ax1.plot(lt, lv, linestyle=':', linewidth=0.1, marker='o', markersize=1.5, markerfacecolor='r', label = "pdo")  #pdo
 
     #^^^^^^^^^^^^^^^^get_Properties_status2_data^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     ltt = []
@@ -326,49 +320,47 @@ if __name__ == '__main__':
     get_Properties_status2_data(text, ltt, lt_main_hot, lt_cp_hot, lt_main,
                                 lt_cp, lt_enable, lt_sw_en, lt_main_cp,
                                 lt_state)
-    ax1.plot(ltt, lt_main)  #main温度
-    ax1.plot(ltt, lt_cp)  #cp温度
+    ax1.plot(ltt, lt_main, label = "T_main")    # main温度
+    ax1.plot(ltt, lt_cp, label = "T_cp")        # cp温度
 
     t, v = conv_square_wave(ltt, lt_main_hot)
-    ax1.plot(t, v, linewidth=0.4, linestyle=':')  #main_hot 布尔值
+    ax1.plot(t, v, linewidth=0.4, linestyle=':', label = "is main_hot")     # main_hot 布尔值
 
     t, v = conv_square_wave(ltt, lt_cp_hot)
-    ax1.plot(t, v, linewidth=0.4, linestyle=':')  #cp_hot布尔值
+    ax1.plot(t, v, linewidth=0.4, linestyle=':', label = "is cp_hot")       # cp_hot布尔值
 
-    plt.hlines(-2, ltt[0], ltt[-1], color='b', linestyle=':',
-               linewidth=0.5)  #main_hot参考线
-    plt.hlines(-4, ltt[0], ltt[-1], linestyle=':', linewidth=0.5,
-               alpha=0.6)  #cp_hot  参考线
-    ax1.plot(ltt, lt_main_cp, linewidth=0.5)  #Tmain - Tcp
+    #           x轴， 长度
+    #plt.vlines(t, 0, 10, linewidth=0.5, linestyle='dashed', alpha=0.1)
+    #ax1.hlines(20, 0, 400)
+    #ax1.vlines(300, 0, 450)
+
+    #ax1.hlines(-2, ltt[0], ltt[-1], color='b', linestyle=':', linewidth=0.5) # main_hot参考线, y值错误
+    #ax1.hlines(-4, ltt[0], ltt[-1], linestyle=':', linewidth=0.5, alpha=0.6) # cp_hot  参考线，y值错误
+    #ax1.plot(ltt, lt_main_cp, linewidth=0.5, label = "Tmain - Tcp")          # Tmain - Tcp
 
     t, v = conv_square_wave(ltt, lt_enable)
-    ax1.plot(t, v, linewidth=0.5, marker='.', markersize='1')  #bit7
-
-    #ax1.plot(ltt,  lt_sw_en, linewidth = 0.5, marker ='.',markersize='1', alpha = 0.9,color='y')
+    ax1.plot(t, v, linewidth=0.5, marker='.', markersize='1', label = "lt_enable")                  #bit7
+    #ax1.plot(ltt,  lt_sw_en, linewidth = 0.5, marker ='.',markersize='1', alpha = 0.9,color='y')    # source is close
+   
     t_switcher, v_switcher = conv_square_wave(ltt, lt_sw_en)
-    ax1.plot(t_switcher, v_switcher, linewidth=0.5, marker='.',
-             markersize='1')  #bit7 & bit0
+    ax1.plot(t_switcher, v_switcher, linewidth=0.5, marker='.',  markersize='1',  label = "v_swithcher")    # bit7 & bit0
+    
+    # 'best', 'upper right', 'upper left', 'lower left', 'lower right', 'right', 'center left', 'center right', 'lower center', 'upper center', 'center'
+    ax1.legend(loc='upper right',  ncol=1, bbox_to_anchor=(1, 1))
+
     for i in range(len(t_switcher)):
         if i == 0:
             continue
+
         if v_switcher[i] > v_switcher[i - 1]:
-            ax1.text(t_switcher[i],
-                     v_switcher[i],
-                     t_switcher[i],
-                     horizontalalignment='left',
-                     verticalalignment='bottom',
-                     fontsize=6,
-                     alpha=0.8,
-                     rotation=70)
+            print(">")
+            ax1.text(t_switcher[i], v_switcher[i], t_switcher[i], horizontalalignment='left', 
+                verticalalignment='bottom', fontsize=6, alpha=0.8, rotation=70)
+
         if v_switcher[i] < v_switcher[i - 1]:
-            ax1.text(t_switcher[i - 1],
-                     v_switcher[i - 1],
-                     t_switcher[i - 1],
-                     horizontalalignment='left',
-                     verticalalignment='bottom',
-                     fontsize=5.8,
-                     alpha=0.7,
-                     rotation=70)
+            print("<")
+            ax1.text(t_switcher[i - 1], v_switcher[i - 1], t_switcher[i - 1], horizontalalignment='left', 
+                verticalalignment='bottom', fontsize=5.8, alpha=0.7, rotation=0)
 
     ax1.set_xlim(170, 480)
     plt.show()

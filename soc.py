@@ -18,7 +18,7 @@ def dmseg_temp_process(dir, set_tmin, set_tmax):
     text = f_temp.read()
     #print(text)
     f_temp.close()
-    return text  #局部变量函数反回会消失
+    return text  # 局部变量函数反回会消失
 
 
 class Msg_soc(object):

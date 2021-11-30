@@ -55,8 +55,8 @@ def parse_class4_effective_vote(self,
                                 isplot=1,
                                 isbool=0,
                                 base=5,
-                                xmin=0,
-                                xmax=0,
+                                xmin=0,         # span if not 0
+                                xmax=0,         #
                                 ax3=None,
                                 fig_3=None):
     client_str_id = {}
@@ -67,6 +67,7 @@ def parse_class4_effective_vote(self,
     if self.d4.get(st) == None:
         print('self.d4.get(', st, ')')
         #st1 = '\[.*?(\d*\.\d*)\]?\s' + st + ':\seffective.*?(\-?\d+)\s.*?(\d+)'
+
         st2 = '\[.*?(\d*\.\d*)]?\s' + st + ':\seffective.*?(\d+)\svoted\sby\s(.*?)\_VOTER\,(\d)'
         effective_vote = re.findall(st2, text)
         #print(effective_vote)
@@ -81,6 +82,7 @@ def parse_class4_effective_vote(self,
     li = []
     f = lambda t: float(t)
     i = lambda v: int(v) / 1000000
+
     for t, v, voter, id in effective_vote:
         temp = t
         temp = f(temp)
@@ -94,6 +96,7 @@ def parse_class4_effective_vote(self,
         li.append(temp)
 
         client_str_id[voter] = id
+
     if isbool:
         lv = list(map(lambda x: x * 100000 * 8 + base, lv))
         #print('isbool',lv)
@@ -105,7 +108,7 @@ def parse_class4_effective_vote(self,
     if self.str_id.get(st) == None:
         self.str_id[st] = client_str_id
 
-    #process span
+    # process span
     if xmin != 0 and xmax != 0 and lt != []:
         print('\n^^^^^^^^^^^^^class4 span start^^^^^^^^^^^^^^^^^^')
         print('class4 print xmin,xmax: ', xmin, xmax)
@@ -121,40 +124,16 @@ def parse_class4_effective_vote(self,
 
         #ax3.plot(lt,lv, marker = '*',linestyle=':',linewidth = 0.5, color = 'lime')
         if show_class4:
-            ax3.plot(lt,
-                     lv,
-                     marker='*',
-                     linestyle=':',
-                     linewidth=0.5,
-                     color=color)
+            ax3.plot(lt, lv, marker='*', linestyle=':', linewidth=0.5, color=color)
         else:
-            ax3.plot(lt,
-                     lv,
-                     marker='*',
-                     linestyle=':',
-                     linewidth=0.5,
-                     color=color,
-                     alpha=0.1)
+            ax3.plot(lt, lv, marker='*', linestyle=':', linewidth=0.5, color=color, alpha=0.1)
             return
         for t, v, i in zip(lt, lv, li):
             #plt.plot(t,v, marker = '*',linestyle=':',linewidth = 0.5, color = 'g',markersize = 7)
             if show_time:
-                ax3.text(t,
-                         v,
-                         t,
-                         horizontalalignment='center',
-                         verticalalignment='bottom',
-                         fontsize=6,
-                         alpha=0.8,
-                         rotation=45)
+                ax3.text(t, v, t, horizontalalignment='center', verticalalignment='bottom', fontsize=6, alpha=0.8, rotation=45)
             if show_id:
-                ax3.text(t,
-                         v,
-                         i,
-                         horizontalalignment='center',
-                         verticalalignment='bottom',
-                         fontsize=7,
-                         alpha=0.95)
+                ax3.text(t, v, i, horizontalalignment='center', verticalalignment='bottom', fontsize=7, alpha=0.95)
 
         fig_3.show()
         print('==========class4 span end===========================\n')
@@ -163,60 +142,25 @@ def parse_class4_effective_vote(self,
 
     if show_class4:
         #ax.plot(lt,lv, marker = '*',linestyle=':',linewidth = 0.5, color = cl)
-        ax.plot(lt,
-                lv,
-                marker,
-                markersize=markersize,
-                color=color,
-                alpha=alpha)
+        ax.plot(lt, lv, marker, markersize=markersize, color=color, alpha=alpha)
 
         lt1, lv1 = conv_square_wave(lt, lv)  #转化成方波
-        ax.plot(lt1,
-                lv1,
-                markersize=markersize,
-                linestyle=linestyle,
-                linewidth=linewidth,
-                color=color,
-                alpha=alpha)
+        ax.plot(lt1, lv1, markersize=markersize, linestyle=linestyle, linewidth=linewidth, color=color, alpha=alpha)
 
         if lt != []:
-            ax.text(lt[0],
-                    lv[0],
-                    st,
-                    horizontalalignment='right',
-                    verticalalignment='bottom',
-                    fontsize=7,
-                    alpha=0.95,
-                    color=color)
+            ax.text(lt[0], lv[0], st, horizontalalignment='right', verticalalignment='bottom', fontsize=7, alpha=0.95, color=color)
 
     else:
         lt2, lv2 = conv_square_wave(lt, lv)
-        ax.plot(lt2,
-                lv2,
-                line_mark,
-                linewidth=linewidth,
-                color=color,
-                alpha=alpha)
+        ax.plot(lt2, lv2, line_mark, linewidth=linewidth, color=color, alpha=alpha)
         return
+
     for t, v, i in zip(lt, lv, li):
         #plt.plot(t,v, marker = '*',linestyle=':',linewidth = 0.5, color = 'g',markersize = 7)
         if show_time:
-            ax.text(t,
-                    v,
-                    t,
-                    horizontalalignment='center',
-                    verticalalignment='bottom',
-                    fontsize=6,
-                    alpha=0.8,
-                    rotation=45)
+            ax.text(t, v, t, horizontalalignment='center', verticalalignment='bottom', fontsize=6, alpha=0.8, rotation=45)
         if show_id:
-            ax.text(t,
-                    v,
-                    i,
-                    horizontalalignment='center',
-                    verticalalignment='bottom',
-                    fontsize=7,
-                    alpha=0.95)
+            ax.text(t, v, i, horizontalalignment='center', verticalalignment='bottom', fontsize=7, alpha=0.95)
     print('class4 run full end ======')
 
 
@@ -553,6 +497,7 @@ if __name__ == '__main__':
     mes = Message()
     m = Msg_soc()
     print('sys.argv', sys.argv)
+
     if len(sys.argv) == 4:                  # 单独使用此文件的情况下，使用时间参数
         set_tmin = float(sys.argv[2])
         set_tmax = float(sys.argv[3])
@@ -616,6 +561,7 @@ if __name__ == '__main__':
             f.close()
             print('soc < 100')
 
+    # 滚轮缩放
     fig = plt.figure(figsize=(16, 8))
     fig.canvas.mpl_connect('scroll_event', call_back)
 
@@ -629,7 +575,7 @@ if __name__ == '__main__':
     ymajorLocator = MultipleLocator(1)
     ax.yaxis.set_major_locator(ymajorLocator)
 
-    #画str_id
+    # 画str_id; voter and id, what woter
     x = -0.15
     y = 0.05
 
@@ -648,50 +594,27 @@ if __name__ == '__main__':
         #print(k,v)
         for item in v:
             i_s = item[1] + ' ' + item[0]
-            ax.text(x,
-                    y,
-                    i_s,
-                    horizontalalignment='left',
-                    verticalalignment='bottom',
-                    fontsize=7,
-                    alpha=0.8,
-                    color='g',
-                    transform=ax.transAxes)
+            ax.text(x, y, i_s, horizontalalignment='left', verticalalignment='bottom', fontsize=7, alpha=0.8, color='g', transform=ax.transAxes)
             y += 0.03
 
-        ax.text(x,
-                y,
-                k,
-                horizontalalignment='left',
-                verticalalignment='bottom',
-                fontsize=9,
-                transform=ax.transAxes)
+        ax.text(x, y, k, horizontalalignment='left', verticalalignment='bottom', fontsize=9, transform=ax.transAxes)
         y += 0.07
 
     #==============span selector================================
     def onselect(xmin, xmax):
         if xmax - xmin > 0.1:
-            fig_3 = plt.figure(
-            )  #每次选择范围，新建一个图，并把key_span重新的fig3重新设置，这样update为新fig图
+            fig_3 = plt.figure()  #每次选择范围，新建一个图，并把key_span重新的fig3重新设置，这样update为新fig图
             ax3 = plt.subplot(111)
             #fig_3,ax3 = plt.subplots()
             # xmin = xmin
             # xmax = xmax
             print('span onselect', xmin, xmax)
 
-            mes.draw_span(
-                xmin, xmax, fig_3,
-                ax3)  #span 直接用parse_class4_effective_vote 函数，不用再 处理文件
+            mes.draw_span(xmin, xmax, fig_3, ax3)  #span 直接用parse_class4_effective_vote 函数，不用再 处理文件
             #parse_class4_effective_vote('FCC',0,1,1,marker = '+',linestyle = ':' ,markersize = 10,color = 'deeppink', alpha = 0.7, xmin=xmin, xmax=xmax,ax3 = ax3,fig_3 = fig_3)
 
             #----parse start----
 
-    span = SpanSelector(
-        ax,
-        onselect,
-        'horizontal',
-        useblit=True,
-        props=dict(alpha=0.5,
-                   facecolor='red'))  #SpanSelector给 onselect返回 xmin，xmax两个参数
+    span = SpanSelector( ax, onselect, 'horizontal', useblit=True, props=dict(alpha=0.5, facecolor='red'))  #SpanSelector给 onselect返回 xmin，xmax两个参数
 
     plt.show()

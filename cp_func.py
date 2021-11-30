@@ -87,21 +87,13 @@ def get_Properties_status2_data(text, ltt, lt_main_hot, lt_cp_hot, lt_main,
         lt_state.append(state)
 
 
-# #^^^^^^^^^^get_main_fcc_config^^^^^^^^^^^^^^
-# #[  183.767859] QCOM-BATT: get_main_fcc_config: Disabling FCC slewing on CP Switcher disable
-# find_get_main_fcc_config = re.findall(r'\[.*?(\d+\.\d+)\].*Disabling\sFCC\sslewing\son\sCP\sSwitcher\sdisable', text)
-# t_cp_disable = list(map(float,find_get_main_fcc_config))
-# print('at start:',t_cp_disable)
-
-
-#-------------class Button Process-----------------------
+# -------------class Button Process-----------------------
 class ButtonProcess(object):
     def __init__(self):
         self.button = 1
 
-
 bu = ButtonProcess()
-#==============span selector================================
+# ==============span selector================================
 # ax3 = plt.subplot(313)
 
 # fig_3 = plt.figure()
@@ -136,7 +128,7 @@ def findmax_index(b, ls):
 def onselect(xmin, xmax):
     if xmax - xmin < 0.3:
         return
-    fig3 = plt.figure()  #每次选择范围，新建一个图，并把key_span重新的fig3重新设置，这样update为新fig图
+    fig3 = plt.figure()     # 每次选择范围，新建一个图，并把key_span重新的fig3重新设置，这样update为新fig图
     ax3 = plt.subplot(111)
     print(xmin, xmax)
     print('bu.button=', bu.button)
@@ -157,6 +149,7 @@ def onselect(xmin, xmax):
                  marker='*',
                  color='lime')
         for t, v in zip(lt3, lv3):
+            # 时间
             ax3.text(t,
                      v,
                      t,
@@ -165,6 +158,7 @@ def onselect(xmin, xmax):
                      fontsize=6,
                      alpha=0.8,
                      rotation=65)
+            # 值
             ax3.text(t,
                      v,
                      v,
@@ -185,7 +179,7 @@ def onselect(xmin, xmax):
         t_min_index = findmin_index(xmin, t_cp_disable)
         t_max_index = findmax_index(xmax, t_cp_disable)
         t_cp = t_cp_disable[t_min_index:t_max_index]
-        print(t_cp)
+        #print(t_cp)
 
         if bu.button != 3:
             vs = list(map(lambda x: (x - 15) / 4, vs))
@@ -217,7 +211,7 @@ def onselect(xmin, xmax):
                          rotation=70)
 
         #---cp_disable--from pl_disable-> get_main_fcc_config---
-        print(t_cp)
+        print(sys._getframe().f_lineno, t_cp)
         for t in t_cp:
             ax3.vlines(t, 0.5, 1, color='g', linestyle='dashed', linewidth=0.5)
             ax3.text(t,
@@ -244,6 +238,7 @@ if __name__ == '__main__':
     import pandas as pd
     #%matplotlib inline
     import re
+    import sys
     from matplotlib.widgets import SpanSelector
     #from matplotlib.widgets import Cursor
     #from matplotlib.widgets import MultiCursor
@@ -263,7 +258,6 @@ if __name__ == '__main__':
         useblit=True,
         props=dict(alpha=0.5, facecolor='red'))  #SpanSelector给 onselect返回 xmin，xmax两个参数
 
-    #---缩放--------------------
     # ----------缩放--------------------------
     def call_back(event):
         axtemp = event.inaxes
@@ -298,6 +292,12 @@ if __name__ == '__main__':
     # ^^^^^^^^^^^^^^^^^pdo^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     lt, lv = get_pdo_data(text)
     ax1.plot(lt, lv, linestyle=':', linewidth=0.1, marker='o', markersize=1.5, markerfacecolor='r', label = "pdo")  #pdo
+
+    # ^^^^^^^^^^get_main_fcc_config^^^^^^^^^^^^^^
+    # [  183.767859] QCOM-BATT: get_main_fcc_config: Disabling FCC slewing on CP Switcher disable
+    find_get_main_fcc_config = re.findall(r'\[.*?(\d+\.\d+)\].*Disabling\sFCC\sslewing\son\sCP\sSwitcher\sdisable', text)
+    t_cp_disable = list(map(float, find_get_main_fcc_config))
+    #print('at start:', t_cp_disable)
 
     # ^^^^^^^^^^^^^^^^get_Properties_status2_data^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     ltt = []

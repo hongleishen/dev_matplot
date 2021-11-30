@@ -127,7 +127,7 @@ def parse(info, str, n, cl, li):
             temp = temp[1]
         li.append(temp)  # li 是line 一行的数据,, 一行数据，添加一行的指定元素值
 
-# li 一行的数据
+# li 奇数行的时间
 # cl 行名
 def get_data(n, li, cl, datas, m=None):
     # global li
@@ -154,8 +154,8 @@ def get_data(n, li, cl, datas, m=None):
             else:
                 l = line.split(':: ')
                 for index, info in enumerate(l):
-                    if index == len(l) - 1:
-                        datas.append(li)  # datas是整体数据, 添加一整行数据
+                    if index == len(l) - 1:     # 一行处理结束
+                        datas.append(li)        # datas是整体数据, 添加一整行数据
                         #print('empty li[]')
                         li = []
                         break

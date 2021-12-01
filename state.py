@@ -1139,24 +1139,6 @@ if __name__ == '__main__':
     t_max = 0 
     get_data(n,li,cl,datas,d)
     df = pd.DataFrame(data=datas,columns=cl)
-    # if t_max_dmesg > 0 :
-        # df = df[df['Uptime'] < t_max_dmesg]
-        # df = df[df['Uptime'] > t_min_dmesg]
-    # if len(sys.argv) >= 4 and float(sys.argv[2]) != 0 and float(sys.argv[3]) != 0  : 
-        # t_start = float(sys.argv[2])
-        # t_end = float(sys.argv[3])
-        
-        # df = df[df['Uptime'] < t_end]
-        # df = df[df['Uptime'] > t_start]   #开始 结束时间传入 
-    # df = df.reset_index(drop = True)
-    # ===========================
-    
-
-    #==time=span=text=====dmest.txt process=============================
-    # f = open('dmesg.txt')
-    # text = f.read()
-    # f.close()
-    
     
     # USB_PD, 
     # USB_HVDCP_3, 
@@ -1168,8 +1150,7 @@ if __name__ == '__main__':
     ctype = df['usbRealType'].value_counts(ascending = True).index.values[-1]
     print('charger type is ', ctype)
     #ctype = 'QC3'
-    pro_use = False
-    
+    pro_use = False     # pro 专业版
     
     
     m = Msg_soc()

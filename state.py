@@ -1150,7 +1150,7 @@ if __name__ == '__main__':
     ctype = df['usbRealType'].value_counts(ascending = True).index.values[-1]
     print('charger type is ', ctype)
     #ctype = 'QC3'
-    pro_use = False     # pro 专业版
+    pro_use = True     # pro 专业版
     
     
     m = Msg_soc()

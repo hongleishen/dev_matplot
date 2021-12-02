@@ -907,6 +907,7 @@ class Buttonprocess(object):
         self.visable = []
         self.first_press_button = True
 
+    # radio button 通过设置 switch再画图软件中根据开关设置是否画图
     def press_pl_disable(self, event):
         self.switch['pl_disable'] = not self.switch['pl_disable']
         if self.switch['pl_disable']:
@@ -985,9 +986,9 @@ class Buttonprocess(object):
         global glines
         global lines
         if self.first_press_button == True:
-            self.visable = [line.get_visible() for line in glines]
+            self.visable = [line.get_visible() for line in glines]      # glines = [l0, l1, l2, l3, l4, l5, l6, l7, la, lb, lc, ld]
         else:
-            self.visable = [line.get_visible() for line in lines]
+            self.visable = [line.get_visible() for line in lines]       # lines = [l0, l1, l2, l3, l4, l5, l6, l7, la, lb, lc, ld]
         print(self.visable)
 
         self.first_press_button = False
@@ -1002,6 +1003,7 @@ class Buttonprocess(object):
         # l8, = ax.plot([1,2,3],[9,9,9], label = 'l8')
         # l9, = ax.plot([1,2,3],[5,6,7], label = 'l9')
 
+        # a. ============通过 self.switch 设置是否画图， switch是通过 radio button设置的===================================================
         if pro_use == True:
             rplot_pl_disable(self.switch['pl_disable'])
 
@@ -1046,6 +1048,8 @@ class Buttonprocess(object):
         #^^^^^^ main_irq ^^^^^^^^^^^^^^^^^^^^
         plot_main_irq(self.switch['main_irq'])
 
+
+        # b. ======================== check button , 方便的通过set visable 设置显示关闭 ==============================================
         #^^^^^^添加 cp图^^^cp.c log^^^^^^^^^^^^^^^^^^^^^^^
         l0, =  ax.plot(lt_pdo,lv_pdo,  linestyle=':',linewidth = 0.1, marker='o', markersize =1.5, markerfacecolor='r', label = 'rpdo')
         
@@ -1303,6 +1307,9 @@ if __name__ == '__main__':
     cursor = Cursor(ax, useblit=True, linewidth=1)
     fig.canvas.mpl_connect('scroll_event', call_back_this)  #缩放
 
+
+
+    # a. button 按住，切换switch,  update 根据switch 整体重新画图
     if ctype != 'USB_HVDCP':
         #^^^^^^^^Button^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         bt = Buttonprocess()
@@ -1557,7 +1564,7 @@ if __name__ == '__main__':
     # print(time)
     #==========================================================
 
-    #^^^^^^check button^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    #b. ^^^^^^check button^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     if ctype == 'USB_PD':
         try:
             glines = [l0, l1, l2, l3, l4, l5, l6, l7, la, lb, lc, ld]

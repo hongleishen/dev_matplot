@@ -816,13 +816,11 @@ def plot_main_irq(is_plot=1):
     d_irqn = {}
     #res = re.findall('\[\s*(\d+?.\d+?)\]\spm6150_charger:\s(.*?):\sIRQ:\s(.*)', text)
     res = re.findall('\[\s*(\d+?.\d+?)\]\s.*?:\s(.*?):\sIRQ:\s(.*)', text)
-    #print(res)
-    # lt_irq =  []
-    # lh = []
-    # ln = []
+    #print("res = ", res, "\n\n")
     t_on = []
     t_off = []
     i = 0
+
     #   handler,name
     for t, h, n in res:
         if h != 'wdog_snarl_irq_handler':
@@ -856,16 +854,21 @@ def plot_main_irq(is_plot=1):
                 
             else :
                 t_on.append(float(t))
+                #print("\n\nt_on = ", t_on)
                 h = 0.5
 
+                # 在现有数据里，从最后比较list， 如果时间小于1s， 这h 往上加
                 if len(t_on) > 1:
                     for j in range(len(t_on)):
                         #print('in for  j=%d' % j)
                         if j == len(t_on) - 1 or j >= 9:
+                            #print("break")
                             break
                         elif t_on[-j - 1] - t_on[-j - 2] < 1:
                             h += 0.175
+                            #print("h = ", h)
                         else:
+                            #print("else")
                             break
 
                 ax.plot(float(t), h, marker='.', markersize=5, alpha=0.7)
@@ -1337,7 +1340,7 @@ if __name__ == '__main__':
         check = bt.check  #check = CheckButtons(rax, labels, visibility)         #lables显示在按钮中
         #self.check = check
 
-    #^^^^^^^^^^^^^^^^^^^pl_disable^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    #^^^pl_disable^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     #                   pl_disable 使用Button
     #…………………………………………pl_disable and stepper_work执行时间点图…………………………………………………………………………………………………………
     if pro_use == True:
@@ -1406,6 +1409,7 @@ if __name__ == '__main__':
                 ax.arrow(t,b,0,a-b, length_includes_head = True, shape ='right',head_width=4.5, head_length=0.1, fc='b', ec='b', width = 0.05)
                 #ax.arrow(t,b,0,a-b, length_includes_head = True, shape ='right',head_width=6, head_length=0.1, fc='orange', ec='b', width = 0.1)
 
+    # main温度， cp温度， smb_en sw_en 
     if ctype != 'USB_HVDCP':
         #^^^^^^^^^^^^^^^^get_Properties_status2_data^^^^^大量数据反回，不适宜用函数反回^^^^^^^^^^^^^^^^^^^^
         ltt = []
@@ -1495,6 +1499,7 @@ if __name__ == '__main__':
     # V_bus = df['usbVoltage']
     # ax.plot(time,V_bus/100,'-.',color='yellowgreen',linewidth = '2',  alpha = 1, label = 'V_bus')
 
+    # T_batt I_batt I_buss I_cp 
     if ctype == 'USB_HVDCP_3' or ctype == 'USB_HVDCP':
         try:
             print('QC3 draw vbus !!!!!!!!!!!!!!!')
@@ -1669,12 +1674,11 @@ if __name__ == '__main__':
         onselect,
         'horizontal',
         useblit=True,
-        rectprops=dict(
+        props=dict(
             alpha=0.5,
             facecolor='red'))  #SpanSelector从 ax 给 onselect返回 xmin，xmax两个参数
 
-    if len(sys.argv) >= 4 and float(sys.argv[2]) != 0 and float(
-            sys.argv[3]) != 0:
+    if len(sys.argv) >= 4 and float(sys.argv[2]) != 0 and float(sys.argv[3]) != 0:
         l = float(sys.argv[3]) - float(sys.argv[2])
         min_x = float(sys.argv[2]) - 0.1 / (1 - 0.1) * l
         print('min_x = ', min_x)

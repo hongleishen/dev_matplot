@@ -527,6 +527,8 @@ def pre_process_file(m, type, v1=None, v2=None):
 # self.df_fast = None
 # self.ax = None
 
+# 画图命令
+# python logminer.py ./ option
 if __name__ == '__main__':
     import os
     import shutil

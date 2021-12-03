@@ -456,8 +456,7 @@ def use_str(m, str):
         i_taper = 0
         t_taper = 0
         try:
-            i_taper = df['batterychrgType'].index[df['batterychrgType'] ==
-                                                  'Taper'][0]
+            i_taper = df['batterychrgType'].index[df['batterychrgType'] == 'Taper'][0]
             t_taper = df['Uptime'][i_taper]
             df = df[df['Uptime'] < t_taper]
         except:

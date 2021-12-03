@@ -558,13 +558,14 @@ if __name__ == '__main__':
         
     ax2 = plt.subplot(212)  #ax2是第二个子图
 
-    #^^^^^^^^^^^^^^^^^^key^^^^^^^^^^^^^^^^^^^^^^^^^^
+    # a. ^^^^^^^^^^^^^^^^^^key^^^^^^^^^^^^^^^^^^^^^^^^^^
     key = Keyprocess()
     fig.canvas.mpl_connect('key_press_event', key.onpress)  #ax1,ax2共用fig
 
     key_span = Keyprocess()  #key_span 指的是新图
 
-    #--------------RadioButton-------调用Key process----------------
+
+    # b. --------------RadioButton-------调用Key process----------------
     axcolor = 'lightgoldenrodyellow'
     rax = plt.axes([0.001, 0.61, 0.05, 0.25], facecolor=axcolor)  #位置
     radio2 = RadioButtons(
@@ -602,7 +603,8 @@ if __name__ == '__main__':
 
     select_votable_func('USB_ICL')  #第一次画ax2-----------------------
 
-    #==============span selector================================
+
+    # c. ==============span selector================================
     def onselect(xmin, xmax):
         if xmax - xmin > 0.1 :
             fig_3 = plt.figure() #每次选择范围，新建一个图，并把key_span重新的fig3重新设置，这样update为新fig图
@@ -625,7 +627,7 @@ if __name__ == '__main__':
         onselect,
         'horizontal',
         useblit=True,
-        rectprops=dict(
+        props=dict(
             alpha=0.5,
             facecolor='red'))  #SpanSelector给 onselect返回 xmin，xmax两个参数
     plt.show()
